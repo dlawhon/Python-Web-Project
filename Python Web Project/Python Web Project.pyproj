@@ -32,6 +32,7 @@
     <Content Include="static\index.js" />
     <Content Include="templates\index.html" />
     <Content Include="templates\invoices.html" />
+    <Content Include="templates\login.html" />
     <Content Include="templates\orders.html" />
     <Content Include="templates\profile.html" />
   </ItemGroup>

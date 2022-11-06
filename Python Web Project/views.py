@@ -32,3 +32,15 @@ def profile():
 @views.route("/go-to-home")
 def go_to_home():
     return redirect(url_for("views.home"))
+
+@views.route("/login", methods=["POST", "GET"])
+def login():
+    if request.method == "POST":
+        user = request.form["username"]
+        return redirect(url_for("views.user", usr=user))
+    else:
+        return render_template("login.html")
+
+@views.route("/<usr>")
+def user(usr):
+    return f"<h1>{usr}</h1>"
