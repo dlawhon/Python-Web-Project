@@ -17,6 +17,14 @@ def home():
     #name = args.get('name')
     #return render_template("index.html", name=name)
 
+@views.route("/orders")
+def orders():
+    return render_template("orders.html")
+
+@views.route("/invoices")
+def invoices():
+    return render_template("invoices.html")
+
 @views.route("/profile")
 def profile():
     return render_template("profile.html")
