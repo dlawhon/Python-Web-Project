@@ -22,6 +22,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.py" />
+    <Compile Include="static\class_user.py" />
+    <Compile Include="static\sql_server_connect_example.py" />
     <Compile Include="views.py" />
   </ItemGroup>
   <ItemGroup>
@@ -35,6 +37,7 @@
     <Content Include="templates\login.html" />
     <Content Include="templates\orders.html" />
     <Content Include="templates\profile.html" />
+    <Content Include="templates\user.html" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

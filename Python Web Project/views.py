@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+import sqlalchemy
 
 views = Blueprint(__name__, "views")
 
@@ -36,11 +37,44 @@ def go_to_home():
 @views.route("/login", methods=["POST", "GET"])
 def login():
     if request.method == "POST":
+        session.permanent = True
         user = request.form["username"]
-        return redirect(url_for("views.user", usr=user))
+        session["user"] = user
+        flash("Login Successful!")
+        return redirect(url_for("views.user"))
     else:
+        if "user" in session:
+            flash("Arleady logged in")
+            return redirect(url_for("views.user"))
+
         return render_template("login.html")
 
-@views.route("/<usr>")
-def user(usr):
-    return f"<h1>{usr}</h1>"
+@views.route("/user", methods=["POST", "GET"])
+def user():
+    if "user" in session:
+        user = session["user"]
+        #return f"<h1>{user}</h1>"
+
+        if request.method == "POST":
+            user_email = request.form["user_email"]
+            session["user_email"] = user_email
+        else:
+            if "user_email" in session:
+                user_email = session["user_email"]
+            else:
+                user_email = ""
+
+        return render_template("user.html", email=user_email)
+    else:
+        flash("You are not logged in!")
+        return redirect(url_for("views.login"))
+
+@views.route("/logout")
+def logout():
+    if "user" in session:
+        user = session["user"]
+        flash(f"{user} you have been logged out!", "info")
+
+    session.pop("user", None)
+    session.pop("user_email", None)
+    return redirect(url_for("views.login"))
