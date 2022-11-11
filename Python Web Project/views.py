@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from static.classes import sqlServerConnect
+#from static.classes import sqlServerConnect
+from static.sys import *
 
 import pyodbc
 
@@ -9,68 +10,55 @@ cursor, conn = sqlServerConnect()
 
 @views.route("/")
 def home():
-    return render_template("index.html", name="Tim")
-
-#@views.route("/profile/<username>")
-#def profile(username):
-    #return render_template("index.html", name=username)
-
-
-#@views.route("/profile")
-#def profile():
-    #args = request.args
-    #name = args.get('name')
-    #return render_template("index.html", name=name)
+    if checkSession() is False:
+        return redirect(url_for("views.login"))
+    else:
+        return render_template("index.html", name="Tim")
 
 @views.route("/orders")
 def orders():
-    return render_template("orders.html")
+    if checkSession() is False:
+        return redirect(url_for("views.login"))
+    else:
+        return render_template("orders.html")
 
 @views.route("/invoices")
 def invoices():
-    return render_template("invoices.html")
+    if checkSession() is False:
+        return redirect(url_for("views.login"))
+    else:
+        return render_template("invoices.html")
 
 @views.route("/profile")
 def profile():
-    return render_template("profile.html")
+    if checkSession() is False:
+        return redirect(url_for("views.login"))
+    else:
+        return render_template("profile.html")
 
 @views.route("/go-to-home")
 def go_to_home():
-    return redirect(url_for("views.home"))
+    if checkSession() is False:
+        return redirect(url_for("views.login"))
+    else:
+        return redirect(url_for("views.home"))
 
 @views.route("/login", methods=["POST", "GET"])
 def login():
     if request.method == "POST":
-        session.permanent = True
+
         user = request.form["username"]
-        session["user"] = user
+ 
+        results = findUser(user)
 
-        #How to query the database with sqlalchemy
-        #found_user = users.query.filter_by(name=user).first()
+        if results:
+            loginUser(results.ID)
+        else:
+            newUser = User(user)
 
-
-       # if found_user:
-            #session["email"] = found_user.email
-       # else:
-            #How to add a record to the database with sqlalchemy
-            #addUser = users(user, "")
-            #db.session.add(addUser)
-            #db.session.commit()
-    
-        cursor.execute("INSERT INTO users (username, email) VALUES ('" + user + "', NULL)")
-
-
-        cursor.commit()
-        #cursor.execute("SELECT username FROM users WHERE " + user + "")
-        #results = cursor.fetchone()
-
-        #for row in cursor.fetchall():
-            #print row
-
-        flash("Login Successful!")
         return redirect(url_for("views.user"))
     else:
-        if "user" in session:
+        if "userName" in session:
             flash("Arleady logged in")
             return redirect(url_for("views.user"))
 
@@ -79,13 +67,13 @@ def login():
 @views.route("/user", methods=["POST", "GET"])
 def user():
     user_email = None
-    if "user" in session:
-        user = session["user"]
+    if "userName" in session:
+        user = session["userName"]
         #return f"<h1>{user}</h1>"
 
         if request.method == "POST":
             user_email = request.form["user_email"]
-            session["user_email"] = user_email
+            session["userEmail"] = user_email
 
             #How to update a record in the database with sqlalchemy
             #found_user = users.query.filter_by(name=user).first()
@@ -94,8 +82,8 @@ def user():
 
             flash("Email was saved!")
         else:
-            if "user_email" in session:
-                user_email = session["user_email"]
+            if "userEmail" in session:
+                user_email = session["userEmail"]
 
         return render_template("user.html", email=user_email, user=user)
     else:
@@ -104,10 +92,11 @@ def user():
 
 @views.route("/logout")
 def logout():
-    if "user" in session:
-        user = session["user"]
+    if "userName" in session:
+        user = session["userName"]
         flash(f"{user} you have been logged out!", "info")
 
-    session.pop("user", None)
-    session.pop("user_email", None)
+    #session.pop("userName", None)
+    #session.pop("userEmail", None)
+    logoutUser()
     return redirect(url_for("views.login"))
