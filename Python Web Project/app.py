@@ -2,7 +2,8 @@ from flask import Flask
 from views import views
 from datetime import timedelta
 
-app = Flask(__name__)
+#app = Flask(__name__)
+app = Flask(__name__, template_folder='./')
 
 app.app_context().push()
 

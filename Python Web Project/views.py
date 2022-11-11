@@ -8,38 +8,44 @@ views = Blueprint(__name__, "views")
 
 cursor, conn = sqlServerConnect()
 
-@views.route("/")
+@views.route("/", methods=['GET', 'POST'])
 def home():
-    if checkSession() is False:
-        return redirect(url_for("views.login"))
+    if request.method == 'POST':
+        model.save()
+        # Failure to return a redirect or render_template
     else:
-        return render_template("index.html", name="Tim")
+        return render_template('index.html')
+
+    #if checkSession() is False:
+        #return True
+    #else:
+        #return render_template("index.html", name="Tim")
 
 @views.route("/orders")
 def orders():
     if checkSession() is False:
-        return redirect(url_for("views.login"))
+        return True
     else:
         return render_template("orders.html")
 
 @views.route("/invoices")
 def invoices():
     if checkSession() is False:
-        return redirect(url_for("views.login"))
+        return True
     else:
         return render_template("invoices.html")
 
 @views.route("/profile")
 def profile():
     if checkSession() is False:
-        return redirect(url_for("views.login"))
+        return True
     else:
         return render_template("profile.html")
 
 @views.route("/go-to-home")
 def go_to_home():
     if checkSession() is False:
-        return redirect(url_for("views.login"))
+        return True
     else:
         return redirect(url_for("views.home"))
 
@@ -88,7 +94,7 @@ def user():
         return render_template("user.html", email=user_email, user=user)
     else:
         flash("You are not logged in!")
-        return redirect(url_for("views.login"))
+        return True
 
 @views.route("/logout")
 def logout():
@@ -99,4 +105,4 @@ def logout():
     #session.pop("userName", None)
     #session.pop("userEmail", None)
     logoutUser()
-    return redirect(url_for("views.login"))
+    return True
