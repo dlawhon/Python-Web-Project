@@ -56,6 +56,16 @@ def login():
             #addUser = users(user, "")
             #db.session.add(addUser)
             #db.session.commit()
+    
+        cursor.execute("INSERT INTO users (username, email) VALUES ('" + user + "', NULL)")
+
+
+        cursor.commit()
+        #cursor.execute("SELECT username FROM users WHERE " + user + "")
+        #results = cursor.fetchone()
+
+        #for row in cursor.fetchall():
+            #print row
 
         flash("Login Successful!")
         return redirect(url_for("views.user"))

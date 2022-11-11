@@ -5,3 +5,6 @@ def sqlServerConnect():
     cursor = conn.cursor()
 
     return cursor, conn
+
+#ODBC driver 17 for SQL Server for local db connections
+#SQL Server for normal connections

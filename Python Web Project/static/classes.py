@@ -5,5 +5,3 @@ def sqlServerConnect():
     cursor = conn.cursor()
 
     return cursor, conn
-
-# #conn = pyodbc.connect('DRIVER={SQL Server};''SERVER=DESKTOP-M5804D6\LOCALDB#1C80D2FA;''DATABASE=PythonWebProjectDB;''''''Trusted_Connection=no;')
