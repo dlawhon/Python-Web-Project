@@ -39,7 +39,11 @@ def loginUser(passUserID):
         return False
 
 def logoutUser():
-    session.clear()
+
+    #session.clear()
+    session.pop("userID", None)
+    session.pop("userName", None)
+    session.pop("userEmail", None)
     return True
 
 class User:
@@ -79,7 +83,7 @@ class User:
         return self.username
 
     def allInfo(self):
-        return "Username " + self.username
+        return self
 
 def checkSession():
     
