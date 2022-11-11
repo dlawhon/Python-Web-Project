@@ -22,6 +22,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.py" />
+    <Compile Include="static\classes.py" />
     <Compile Include="static\class_user.py" />
     <Compile Include="static\sql_server_connect_example.py" />
     <Compile Include="views.py" />
