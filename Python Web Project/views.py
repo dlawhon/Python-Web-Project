@@ -9,136 +9,106 @@ cursor, conn = sqlServerConnect()
 
 @views.route("/", methods=['GET', 'POST'])
 def home():
-    #if #request.method == 'POST':
+    #if request.method == 'POST':
         #model.save()
         # Failure to return a redirect or render_template
     #else:
         #return render_template('index.html')
 
-    #if checkSession() is False:
-        #return True
-    #else:
-    return render_template("index.html", name="Tim")
-
-
-
+    if checkSession() is False:
+        return redirect(url_for("views.login"))
+    else:
+        return render_template("index.html")
 
 @views.route("/charts")
 def charts():
-    #if checkSession() is False:
-        #return True
-    #else:
-    return render_template("charts.html")
-
+    if checkSession() is False:
+        return redirect(url_for("views.login"))
+    else:
+        return render_template("charts.html")
 
 @views.route("/cards")
 def cards():
-    #if checkSession() is False:
-        #return True
-    #else:
-    return render_template("cards.html")
-
+    if checkSession() is False:
+        return redirect(url_for("views.login"))
+    else:
+        return render_template("cards.html")
 
 @views.route("/buttons")
 def buttons():
-    #if checkSession() is False:
-        #return True
-    #else:
-    return render_template("buttons.html")
+    if checkSession() is False:
+        return redirect(url_for("views.login"))
+    else:
+        return render_template("buttons.html")
 
 @views.route("/tables")
 def tables():
-    #if checkSession() is False:
-        #return True
-    #else:
-    return render_template("tables.html")
+    if checkSession() is False:
+        return redirect(url_for("views.login"))
+    else:
+        return render_template("tables.html")
 
 @views.route("/register")
 def register():
-    #if checkSession() is False:
-        #return True
-    #else:
     return render_template("register.html")
 
 @views.route("/forgot-password")
 def forgot_password():
-    #if checkSession() is False:
-        #return True
-    #else:
     return render_template("forgot-password.html")
 
 @views.route("/404")
 def error():
-    #if checkSession() is False:
-        #return True
-    #else:
-    return render_template("404.html")
+    if checkSession() is False:
+        return redirect(url_for("views.login"))
+    else:
+        return render_template("404.html")
 
 @views.route("/blank")
 def blank():
-    #if checkSession() is False:
-        #return True
-    #else:
-    return render_template("blank.html")
+    if checkSession() is False:
+        return redirect(url_for("views.login"))
+    else:
+        return render_template("blank.html")
 
 @views.route("/utilities-animation")
-def utilites_animation():
-    #if checkSession() is False:
-        #return True
-    #else:
-    return render_template("utilities-animation.html")
+def utilities_animation():
+    if checkSession() is False:
+        return redirect(url_for("views.login"))
+    else:
+        return render_template("utilities-animation.html")
 
 @views.route("/utilities-border")
-def utilites_border():
-    #if checkSession() is False:
-        #return True
-    #else:
-    return render_template("utilities-border.html")
+def utilities_border():
+    if checkSession() is False:
+        return redirect(url_for("views.login"))
+    else:
+        return render_template("utilities-border.html")
 
 @views.route("/utilities-color")
-def utilites_color():
-    #if checkSession() is False:
-        #return True
-    #else:
-    return render_template("utilities-color.html")
+def utilities_color():
+    if checkSession() is False:
+        return redirect(url_for("views.login"))
+    else:
+        return render_template("utilities-color.html")
 
 @views.route("/utilities-other")
-def utilites_other():
-    #if checkSession() is False:
-        #return True
-    #else:
-    return render_template("utilities-other.html")
-
-
-
-
-
-
-@views.route("/orders")
-def orders():
+def utilities_other():
     if checkSession() is False:
-        return True
+        return redirect(url_for("views.login"))
     else:
-        return render_template("orders.html")
-
-@views.route("/invoices")
-def invoices():
-    if checkSession() is False:
-        return True
-    else:
-        return render_template("invoices.html")
+        return render_template("utilities-other.html")
 
 @views.route("/profile")
 def profile():
     if checkSession() is False:
-        return True
+        return redirect(url_for("views.login"))
     else:
         return render_template("profile.html")
 
 @views.route("/go-to-home")
 def go_to_home():
     if checkSession() is False:
-        return True
+        return redirect(url_for("views.login"))
     else:
         return redirect(url_for("views.home"))
 
@@ -155,11 +125,13 @@ def login():
         else:
             newUser = User(user)
 
-        return redirect(url_for("views.user"))
+        return redirect(url_for("views.home"))
+        #return redirect(url_for("views.user"))
     else:
         if "userName" in session:
             flash("Arleady logged in")
-            return redirect(url_for("views.user"))
+            return redirect(url_for("views.home"))
+            #return redirect(url_for("views.user"))
 
         return render_template("login.html")
 
@@ -195,7 +167,5 @@ def logout():
         user = session["userName"]
         flash(f"{user} you have been logged out!", "info")
 
-    #session.pop("userName", None)
-    #session.pop("userEmail", None)
     logoutUser()
-    return True
+    return redirect(url_for("views.home"))
