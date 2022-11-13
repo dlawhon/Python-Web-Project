@@ -10,16 +10,16 @@ cursor, conn = sqlServerConnect()
 
 @views.route("/", methods=['GET', 'POST'])
 def home():
-    if request.method == 'POST':
-        model.save()
+    #if #request.method == 'POST':
+        #model.save()
         # Failure to return a redirect or render_template
-    else:
-        return render_template('index.html')
+    #else:
+        #return render_template('index.html')
 
     #if checkSession() is False:
         #return True
     #else:
-        #return render_template("index.html", name="Tim")
+    return render_template("index.html", name="Tim")
 
 @views.route("/orders")
 def orders():
