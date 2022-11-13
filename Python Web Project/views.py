@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from flask_login import LoginManager, login_required, current_user
 from static.sys import *
+from werkzeug.security import generate_password_hash, check_password_hash
 
 import pyodbc
 
@@ -7,14 +9,101 @@ views = Blueprint(__name__, "views")
 
 cursor, conn = sqlServerConnect()
 
-@views.route("/", methods=['GET', 'POST'])
-def home():
-    #if request.method == 'POST':
-        #model.save()
-        # Failure to return a redirect or render_template
-    #else:
-        #return render_template('index.html')
+@views.route("/login", methods=["POST", "GET"])
+def login():
+    if request.method == "POST":
 
+        username = request.form["username"]
+        userPassword = request.form["userPassword"]
+
+        userParameters = {
+          "userFirstName": None,
+          "userLastName": None,
+          "username": username,
+          "userEmail": None,
+          "userPassword": userPassword
+        }
+ 
+        results = findUser(username)
+
+        if results:
+            #check the password
+            if check_password_hash(results.hash, userParameters.get('userPassword')):
+                #Maybe?????
+                #login_user(user, remember=remember)
+                loginUser(results.ID)
+            else:
+                #The did not provide the correct password
+                session.pop('_flashes', None)
+                flash("Incorrect Username/Password", "danger")
+                return render_template("login.html")
+            
+        else:
+            flash("Incorrect Username/Password", "danger")
+            return render_template("login.html")
+            #newUser = User(userParameters)
+
+        return redirect(url_for("views.home"))
+        #return redirect(url_for("views.user"))
+    else:
+        if "userName" in session:
+            flash("Arleady logged in")
+            return redirect(url_for("views.home"))
+            #return redirect(url_for("views.user"))
+
+        return render_template("login.html")
+
+@views.route("/register", methods=["POST", "GET"])
+def register():
+    
+    if request.method == "POST":
+
+        userFirstName = request.form["userFirstName"]
+        userLastName = request.form["userFirstName"]
+        username = request.form["username"]
+        userEmail = request.form["userEmail"]
+        userPassword = request.form["userPassword"]
+
+        userParameters = {
+          "userFirstName": userFirstName,
+          "userLastName": userLastName,
+          "username": username,
+          "userEmail": userEmail,
+          "userPassword": userPassword
+        }
+ 
+        results = findUser(username)
+
+        if results:
+            #This user already exists, they may need to reset their password
+            loginUser(results.ID)
+        else:
+            newUser = User(userParameters)
+
+        return redirect(url_for("views.home"))
+    else:
+        #if "userName" in session:
+            #flash("Arleady logged in")
+        return render_template("register.html")
+            #return redirect(url_for("views.user"))
+
+    #return render_template("register.html")
+
+
+
+    
+#Maybe?????
+#login_manager = LoginManager()
+#login_manager.login_view = 'views.login'
+#login_manager.init_app(app)
+
+
+
+
+
+@views.route("/", methods=['GET', 'POST'])
+#@login_required
+def home():
     if checkSession() is False:
         return redirect(url_for("views.login"))
     else:
@@ -47,10 +136,6 @@ def tables():
         return redirect(url_for("views.login"))
     else:
         return render_template("tables.html")
-
-@views.route("/register")
-def register():
-    return render_template("register.html")
 
 @views.route("/forgot-password")
 def forgot_password():
@@ -111,29 +196,6 @@ def go_to_home():
         return redirect(url_for("views.login"))
     else:
         return redirect(url_for("views.home"))
-
-@views.route("/login", methods=["POST", "GET"])
-def login():
-    if request.method == "POST":
-
-        user = request.form["username"]
- 
-        results = findUser(user)
-
-        if results:
-            loginUser(results.ID)
-        else:
-            newUser = User(user)
-
-        return redirect(url_for("views.home"))
-        #return redirect(url_for("views.user"))
-    else:
-        if "userName" in session:
-            flash("Arleady logged in")
-            return redirect(url_for("views.home"))
-            #return redirect(url_for("views.user"))
-
-        return render_template("login.html")
 
 @views.route("/user", methods=["POST", "GET"])
 def user():
