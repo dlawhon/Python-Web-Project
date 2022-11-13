@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-#from static.classes import sqlServerConnect
 from static.sys import *
 
 import pyodbc
@@ -20,6 +19,100 @@ def home():
         #return True
     #else:
     return render_template("index.html", name="Tim")
+
+
+
+
+@views.route("/charts")
+def charts():
+    #if checkSession() is False:
+        #return True
+    #else:
+    return render_template("charts.html")
+
+
+@views.route("/cards")
+def cards():
+    #if checkSession() is False:
+        #return True
+    #else:
+    return render_template("cards.html")
+
+
+@views.route("/buttons")
+def buttons():
+    #if checkSession() is False:
+        #return True
+    #else:
+    return render_template("buttons.html")
+
+@views.route("/tables")
+def tables():
+    #if checkSession() is False:
+        #return True
+    #else:
+    return render_template("tables.html")
+
+@views.route("/register")
+def register():
+    #if checkSession() is False:
+        #return True
+    #else:
+    return render_template("register.html")
+
+@views.route("/forgot-password")
+def forgot_password():
+    #if checkSession() is False:
+        #return True
+    #else:
+    return render_template("forgot-password.html")
+
+@views.route("/404")
+def error():
+    #if checkSession() is False:
+        #return True
+    #else:
+    return render_template("404.html")
+
+@views.route("/blank")
+def blank():
+    #if checkSession() is False:
+        #return True
+    #else:
+    return render_template("blank.html")
+
+@views.route("/utilities-animation")
+def utilites_animation():
+    #if checkSession() is False:
+        #return True
+    #else:
+    return render_template("utilities-animation.html")
+
+@views.route("/utilities-border")
+def utilites_border():
+    #if checkSession() is False:
+        #return True
+    #else:
+    return render_template("utilities-border.html")
+
+@views.route("/utilities-color")
+def utilites_color():
+    #if checkSession() is False:
+        #return True
+    #else:
+    return render_template("utilities-color.html")
+
+@views.route("/utilities-other")
+def utilites_other():
+    #if checkSession() is False:
+        #return True
+    #else:
+    return render_template("utilities-other.html")
+
+
+
+
+
 
 @views.route("/orders")
 def orders():
