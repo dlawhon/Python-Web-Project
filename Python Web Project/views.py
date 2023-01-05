@@ -183,19 +183,28 @@ def utilities_other():
     else:
         return render_template("utilities-other.html")
 
-@views.route("/profile")
-def profile():
-    if checkSession() is False:
-        return redirect(url_for("views.login"))
-    else:
-        return render_template("profile.html")
-
 @views.route("/go-to-home")
 def go_to_home():
     if checkSession() is False:
         return redirect(url_for("views.login"))
     else:
         return redirect(url_for("views.home"))
+
+@views.route("/profile", methods=["POST", "GET"])
+def profile():
+
+    if request.method == "POST":
+        user_email = request.form["user_email"]
+        session["userEmail"] = user_email
+
+        flash("Email was saved!")
+    else:
+        user_id = session["userID"]
+
+    if checkSession() is False:
+        return redirect(url_for("views.login"))
+    else:
+        return render_template("profile.html", user_id=user_id)
 
 @views.route("/user", methods=["POST", "GET"])
 def user():
