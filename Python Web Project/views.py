@@ -59,7 +59,7 @@ def register():
     if request.method == "POST":
 
         userFirstName = request.form["userFirstName"]
-        userLastName = request.form["userFirstName"]
+        userLastName = request.form["userLastName"]
         username = request.form["username"]
         userEmail = request.form["userEmail"]
         userPassword = request.form["userPassword"]
