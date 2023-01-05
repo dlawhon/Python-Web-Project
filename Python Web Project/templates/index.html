@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Trucking</title>
+    <title>P12oject3s</title>
 
     <!-- Custom fonts for this template-->
     <link href="/static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -35,17 +35,37 @@
                 <div class="sidebar-brand-icon">
                     <i class="fas fa-home"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">Trucking</div>
+                <div class="sidebar-brand-text mx-3">P12oject3s</div>
             </a>
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
 
 		    <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
+            <li class="nav-item collapsed">
                 <a class="nav-link" href="/views/">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
+            </li>
+
+            <li class="nav-item collapsed">
+                <a class="nav-link" href="/views/projects">
+                   <i class="fas fa-fw fa-solid fa-sitemap"></i>
+                    <span>Projects</span></a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                    aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-solid fa-lock"></i>
+                    <span>Admin</span>
+                </a>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="/views/users">Users</a>
+                        <a class="collapse-item" href="/views/settings">Settings</a>
+                    </div>
+                </div>
             </li>
 -
             <!-- Divider -->
