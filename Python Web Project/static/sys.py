@@ -1,5 +1,6 @@
 from flask import session
 from werkzeug.security import generate_password_hash, check_password_hash
+import json
 
 
 
@@ -117,11 +118,33 @@ def logoutUser():
     session.pop("userEmail", None)
     return True
 
+def getUsers():
+
+    cursor, conn = sqlServerConnect()
+
+    cursor.execute("SELECT id, first_name, last_name, username, email FROM users")
+    rows = cursor.fetchall()
+
+    rowarray_list = []
+    for row in rows:
+        t = (row[0], row[1], row[2], row[3], row[4])
+        rowarray_list.append(t)
+
+    final_array = {'data': rowarray_list}
+    j = json.dumps(final_array, indent=4, sort_keys=True, default=str)
+
+    if rows:
+        return final_array
+    else:
+        return None
+
 def checkSession():
     
     if "userName" in session:
         return True
     else:
         return False
+
+
 
 

@@ -35,11 +35,10 @@
     <Content Include="static\index.js" />
     <Content Include="templates\index.html" />
     <Content Include="templates\index_bak.html" />
-    <Content Include="templates\invoices.html" />
     <Content Include="templates\login.html" />
-    <Content Include="templates\orders.html" />
     <Content Include="templates\profile.html" />
-    <Content Include="templates\user.html" />
+    <Content Include="templates\settings.html" />
+    <Content Include="templates\users.html" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

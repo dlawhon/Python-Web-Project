@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_login import LoginManager, login_required, current_user
 from static.sys import *
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -89,25 +89,38 @@ def register():
 
     #return render_template("register.html")
 
+@views.route('/get_users', methods=['GET', 'POST'])
+def get_users():
 
+    results = getUsers()
 
-    
-#Maybe?????
-#login_manager = LoginManager()
-#login_manager.login_view = 'views.login'
-#login_manager.init_app(app)
+    return results
 
+@views.route('/projects')
+def projects():
 
-
-
+    return "<h1 style='color:red;'>Projects</h1>"
 
 @views.route("/", methods=['GET', 'POST'])
-#@login_required
 def home():
     if checkSession() is False:
         return redirect(url_for("views.login"))
     else:
         return render_template("index.html")
+
+@views.route("/users")
+def users():
+    if checkSession() is False:
+        return redirect(url_for("views.login"))
+    else:
+        return render_template("users.html")
+
+@views.route("/settings")
+def settings():
+    if checkSession() is False:
+        return redirect(url_for("views.login"))
+    else:
+        return render_template("settings.html")
 
 @views.route("/charts")
 def charts():
@@ -211,16 +224,10 @@ def user():
     user_email = None
     if "userName" in session:
         user = session["userName"]
-        #return f"<h1>{user}</h1>"
 
         if request.method == "POST":
             user_email = request.form["user_email"]
             session["userEmail"] = user_email
-
-            #How to update a record in the database with sqlalchemy
-            #found_user = users.query.filter_by(name=user).first()
-            #found_user.email = user_email
-            #db.session.commit()
 
             flash("Email was saved!")
         else:
