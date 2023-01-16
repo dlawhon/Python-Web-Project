@@ -1,7 +1,7 @@
 {% extends "index.html" %}
 
 {% block title %}
-Users
+Projects
 {% endblock %}
 
 {% block content %}
@@ -10,20 +10,21 @@ Users
     <div class="container-fluid">
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-gray-800">Users</h1>
+        <h1 class="h3 mb-2 text-gray-800">Projects</h1>
 
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="usersDataTable" width="100%" cellspacing="0">
+                    <table class="table table-bordered" id="projectsDataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Username</th>
-                                <th>Email</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Projected Length</th>
+                                <th>Owner</th>
+                                <th>Creation Date</th>
                             </tr>
                         </thead>
                         </tbody>
@@ -35,8 +36,8 @@ Users
     </div>
     <script type="text/javascript">
     $(document).ready(function () {
-        $('#usersDataTable').DataTable({
-            ajax: 'get_users',
+        $('#projectsDataTable').DataTable({
+            ajax: 'get_projects',
         });
     });
     </script>

@@ -96,10 +96,13 @@ def get_users():
 
     return results
 
-@views.route('/projects')
-def projects():
 
-    return "<h1 style='color:red;'>Projects</h1>"
+@views.route('/get_projects', methods=['GET', 'POST'])
+def get_projects():
+
+    results = getProjects()
+
+    return results
 
 @views.route("/", methods=['GET', 'POST'])
 def home():
@@ -114,6 +117,13 @@ def users():
         return redirect(url_for("views.login"))
     else:
         return render_template("users.html")
+
+@views.route("/projects")
+def projects():
+    if checkSession() is False:
+        return redirect(url_for("views.login"))
+    else:
+        return render_template("projects.html")
 
 @views.route("/settings")
 def settings():

@@ -138,6 +138,27 @@ def getUsers():
     else:
         return None
 
+
+def getProjects():
+
+    cursor, conn = sqlServerConnect()
+
+    cursor.execute("SELECT ID, project_name, project_description, project_length, project_owner, creation_date FROM projects")
+    rows = cursor.fetchall()
+
+    rowarray_list = []
+    for row in rows:
+        t = (row[0], row[1], row[2], row[3], row[4], row[5])
+        rowarray_list.append(t)
+
+    final_array = {'data': rowarray_list}
+    j = json.dumps(final_array, indent=4, sort_keys=True, default=str)
+
+    if rows:
+        return final_array
+    else:
+        return None
+
 def checkSession():
     
     if "userName" in session:
