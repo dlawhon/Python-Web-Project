@@ -37,6 +37,7 @@
     <Content Include="templates\index_bak.html" />
     <Content Include="templates\login.html" />
     <Content Include="templates\profile.html" />
+    <Content Include="templates\project.html" />
     <Content Include="templates\projects.html" />
     <Content Include="templates\settings.html" />
     <Content Include="templates\users.html" />

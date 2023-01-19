@@ -87,7 +87,23 @@ def register():
         return render_template("register.html")
             #return redirect(url_for("views.user"))
 
-    #return render_template("register.html")
+
+@views.route('/project/<id>', methods=['GET', 'POST'])
+def project(id):
+
+    if request.method == "GET":
+
+        projectParameters = {
+          "id": id
+        }
+
+        #return 'The id is ' + id
+        if checkSession() is False:
+            return redirect(url_for("views.login"))
+        else:
+            #how to get GET parameter projectID = request.args.get('id')
+            newProject = Project(projectParameters)
+            return render_template("project.html", projectID = id)
 
 @views.route('/get_users', methods=['GET', 'POST'])
 def get_users():
@@ -96,11 +112,33 @@ def get_users():
 
     return results
 
+@views.route('/disable_project/<id>', methods=['GET', 'POST'])
+def disable_project(id):
+
+    newProject = Project({"id": id})
+    newProject.disable() 
+
+    return redirect(url_for("views.projects"))
+
+@views.route('/activate_project/<id>', methods=['GET', 'POST'])
+def activate_project(id):
+
+    newProject = Project({"id": id})
+    newProject.activate() 
+
+    return redirect(url_for("views.projects"))
 
 @views.route('/get_projects', methods=['GET', 'POST'])
 def get_projects():
 
-    results = getProjects()
+    results = getProjects('active')
+
+    return results
+
+@views.route('/get_disabled_projects', methods=['GET', 'POST'])
+def get_disabled_projects():
+
+    results = getProjects('inactive')
 
     return results
 

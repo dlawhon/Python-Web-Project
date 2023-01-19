@@ -10,7 +10,7 @@ Projects
     <div class="container-fluid">
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-gray-800">Projects</h1>
+        <h1 class="h3 mb-2 text-gray-800 pageHeader">Active Projects</h1>
 
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
@@ -25,6 +25,8 @@ Projects
                                 <th>Projected Length</th>
                                 <th>Owner</th>
                                 <th>Creation Date</th>
+                                <th></th>
+                                <th></th>
                             </tr>
                         </thead>
                         </tbody>
@@ -35,10 +37,107 @@ Projects
 
     </div>
     <script type="text/javascript">
-    $(document).ready(function () {
-        $('#projectsDataTable').DataTable({
+
+    function activeProjects() {
+        $('.pageHeader').html('Active Projects');
+
+        var table = $('#projectsDataTable').DataTable({
             ajax: 'get_projects',
+            columnDefs: [
+                {
+                    targets: -2,
+                    data: null,
+                    defaultContent: '<button class=\'btn btn-sm btn-primary viewProject\'>View</button>',
+                },
+                {
+                    targets: -1,
+                    data: null,
+                    defaultContent: '<button class=\'btn btn-sm btn-danger disableProject\'>Disable</button>',
+                }
+            ],
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    text: 'Disabled Projects',
+                    className: 'btn-danger',
+                    action: function ( e, dt, node, config ) {
+
+                        $('#projectsDataTable').empty();
+                        $('#projectsDataTable').DataTable().destroy();
+
+                        disabledProjects();
+
+                    }
+                }
+            ]
         });
+
+        $('#projectsDataTable tbody').on('click', '.viewProject', function () {
+            var data = table.row($(this).parents('tr')).data();
+            //alert(data[0] + "'s salary is: " + data[5]);
+            window.open("/views/project/" + data[0]);
+         });
+
+         $('#projectsDataTable tbody').on('click', '.disableProject', function () {
+            var data = table.row($(this).parents('tr')).data();
+            window.open("/views/disable_project/" + data[0],"_self");
+         });
+    }
+
+        function disabledProjects() {
+            $('.pageHeader').html('Disabled Projects');
+
+            var table = $('#projectsDataTable').DataTable({
+                ajax: 'get_disabled_projects',
+                columnDefs: [
+                    {
+                        targets: -2,
+                        data: null,
+                        defaultContent: '<button class=\'btn btn-sm btn-primary viewProject\'>View</button>',
+                    },
+                    {
+                        targets: -1,
+                        data: null,
+                        defaultContent: '<button class=\'btn btn-sm btn-danger activateProject\'>Activate</button>',
+                    }
+                ],
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        text: 'Active Projects',
+                        className: 'btn-success',
+                        action: function ( e, dt, node, config ) {
+
+                            $('#projectsDataTable').empty();
+                            $('#projectsDataTable').DataTable().destroy();
+
+                            activeProjects();
+
+                        }
+                    }
+                ]
+        });
+
+        $('#projectsDataTable tbody').on('click', '.viewProject', function () {
+            var data = table.row($(this).parents('tr')).data();
+            //alert(data[0] + "'s salary is: " + data[5]);
+            window.open("/views/project/" + data[0]);
+         });
+
+         $('#projectsDataTable tbody').on('click', '.disableProject', function () {
+            var data = table.row($(this).parents('tr')).data();
+            window.open("/views/disable_project/" + data[0],"_self");
+         });
+
+         $('#projectsDataTable tbody').on('click', '.activateProject', function () {
+            var data = table.row($(this).parents('tr')).data();
+            window.open("/views/activate_project/" + data[0],"_self");
+         });
+    }
+
+    $(document).ready(function () {
+        activeProjects();
+
     });
     </script>
     <!-- /.container-fluid -->

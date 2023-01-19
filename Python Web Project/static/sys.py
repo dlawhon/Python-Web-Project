@@ -2,9 +2,6 @@ from flask import session
 from werkzeug.security import generate_password_hash, check_password_hash
 import json
 
-
-
-
 class User:
 
     def __init__(self, params):
@@ -52,6 +49,69 @@ class User:
         return self
 
 
+class Project:
+
+    def __init__(self, params):
+
+        cursor, conn = sqlServerConnect()
+
+        cursor.execute("SELECT * FROM projects WHERE id = ?", params.get('id'))
+        results = cursor.fetchone()
+
+        if results:
+            #We need to return the project's info and set the class
+            self.ID = results.ID
+            self.project_name = results.project_name
+            self.project_description = results.project_description
+            self.project_length = results.project_length
+            self.project_owner = results.project_owner
+            self.disabled = results.disabled
+            self.creation_date = results.creation_date
+
+           #return results
+
+    def disable(self):
+
+        cursor, conn = sqlServerConnect()
+
+        cursor.execute("UPDATE projects SET disabled = 1 WHERE ID = ?", self.ID)
+
+        conn.commit()
+
+    
+    def activate(self):
+
+        cursor, conn = sqlServerConnect()
+
+        cursor.execute("UPDATE projects SET disabled = 0 WHERE ID = ?", self.ID)
+
+        conn.commit()
+
+    def allInfo(self):
+        return self.project_name
+
+        #else:
+            #We need to add a new project
+
+            #userPassword=generate_password_hash(params.get('userPassword'), method='sha256')
+
+            #cursor.execute("INSERT INTO users (first_name, last_name, username, email, hash) VALUES (?,?,?,?,?)", params.get('userFirstName'), params.get('userLastName'), params.get('username'), params.get('userEmail'), userPassword);
+            #cursor.commit()
+
+            #cursor.execute("SELECT @@IDENTITY AS ID;")
+            #newID = cursor.fetchone()[0]
+
+            #self.ID = newID
+            #self.firstName = params.get('userFirstName')
+            #self.lastName = params.get('userLastName')
+            #self.username = params.get('username')
+            #self.email = params.get('userEmail')
+
+    #def setUsername(passUsername):
+        #self.username = passUsername
+
+    #def getUsername(self):
+        #return self.username
 
 
 def sqlServerConnect():
@@ -139,16 +199,21 @@ def getUsers():
         return None
 
 
-def getProjects():
+def getProjects(status):
 
     cursor, conn = sqlServerConnect()
 
-    cursor.execute("SELECT ID, project_name, project_description, project_length, project_owner, creation_date FROM projects")
+    if status == 'active':
+        status = 0
+    else:
+        status = 1
+
+    cursor.execute("SELECT ID, project_name, project_description, project_length, project_owner, creation_date, '', '' FROM projects WHERE disabled = ? ", status)
     rows = cursor.fetchall()
 
     rowarray_list = []
     for row in rows:
-        t = (row[0], row[1], row[2], row[3], row[4], row[5])
+        t = (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
         rowarray_list.append(t)
 
     final_array = {'data': rowarray_list}
@@ -157,7 +222,7 @@ def getProjects():
     if rows:
         return final_array
     else:
-        return None
+        return rowarray_list
 
 def checkSession():
     
