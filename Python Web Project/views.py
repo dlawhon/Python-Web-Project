@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_login import LoginManager, login_required, current_user
-from static.sys import *
 from werkzeug.security import generate_password_hash, check_password_hash
+from static.sys import *
 
 import pyodbc
 
@@ -103,7 +103,10 @@ def project(id):
         else:
             #how to get GET parameter projectID = request.args.get('id')
             newProject = Project(projectParameters)
-            return render_template("project.html", projectID = id)
+            projectData = vars(newProject)
+            projectSteps = newProject.getSteps()
+
+            return render_template("project.html", projectData = projectData, dataLen = len(projectData), steps = projectSteps, stepsLen = len(projectSteps))
 
 @views.route('/get_users', methods=['GET', 'POST'])
 def get_users():
@@ -111,6 +114,14 @@ def get_users():
     results = getUsers()
 
     return results
+
+@views.route('/complete_step/<id>', methods=['GET', 'POST'])
+def complete_step(id):
+
+    newProject = ProjectStep({"id": id})
+    newProject.complete() 
+
+    return 'done'
 
 @views.route('/disable_project/<id>', methods=['GET', 'POST'])
 def disable_project(id):

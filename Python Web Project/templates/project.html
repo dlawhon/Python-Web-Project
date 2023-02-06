@@ -10,48 +10,72 @@ Project
     <div class="container-fluid">
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-gray-800">Project {{ projectID }} </h1>
+        <!--<h1 class="h3 mb-2 text-gray-800">Project: {{ projectData['project_name'] }} </h1>-->
 
-         <!-- Collapsable Card Example -->
+        <!-- Dropdown Card Example -->
         <div class="card shadow mb-4">
-            <!-- Card Header - Accordion -->
-            <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse"
-                role="button" aria-expanded="true" aria-controls="collapseCardExample">
-                <h6 class="m-0 font-weight-bold text-primary">Collapsable Card Example</h6>
-            </a>
-            <!-- Card Content - Collapse -->
-            <div class="collapse show" id="collapseCardExample">
-                <div class="card-body">
-                    This is a collapsable card example using Bootstrap's built in collapse
-                    functionality. <strong>Click on the card header</strong> to see the card body
-                    collapse and expand!
+            <!-- Card Header - Dropdown -->
+            <div
+                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h3 class="m-0 font-weight-bold text-primary">Project: {{ projectData['project_name'] }}</h3>
+                <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                        aria-labelledby="dropdownMenuLink">
+                        <div class="dropdown-header">Dropdown Header:</div>
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
                 </div>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                {{ projectData['project_description'] }}
             </div>
         </div>
 
         <hr>
 
-        <!-- Earnings (Monthly) Card Example -->
+        
+        {%for i in range(0, stepsLen)%}
+            <!-- Step Card -->
             <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card border-left-primary shadow h-100 py-2" style="background-color:#{{ steps[i]['step_color'] }}">
                     <div class="card-body">
-                        <div class="row no-gutters align-items-center">
+                        <div class="row no-gutters align-items-center" style="color:
+                        {% if steps[i]['step_completion'] == 1 %}
+                            green                
+                        {%endif%} "> 
                             <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Earnings (Monthly)</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                <div class="h5 font-weight-bold text-primary text-uppercase mb-1">
+                                    {{ steps[i]['step_order'] }}. {{ steps[i]['step_description'] }} </div>
+                                <div class="h6 mb-0 font-weight-bold text-gray-800"> {{ steps[i]['step_instructions'] }}</div>
                             </div>
                             <div class="col-auto">
-                                <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                <i class="fas fa-check-square fa-2x" onclick="completeStep({{ steps[i]['ID'] }})" data-toggle="tooltip" data-placement="top" title="Click to Complete Step"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        {%endfor%}
 
     </div>
     <script type="text/javascript">
-
+        function completeStep(stepID) {
+            $.ajax( {
+                url: "/views/complete_step/" + stepID,
+                type: "POST"
+            }).done(function (data)
+            {
+                window.location.reload();//When the POST is done, we reload the page.
+            });
+        }
     </script>
     <!-- /.container-fluid -->
 {% endblock %}

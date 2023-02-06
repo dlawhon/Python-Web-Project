@@ -90,28 +90,54 @@ class Project:
     def allInfo(self):
         return self.project_name
 
-        #else:
-            #We need to add a new project
+    def getSteps(self):
 
-            #userPassword=generate_password_hash(params.get('userPassword'), method='sha256')
+        cursor, conn = sqlServerConnect()
 
-            #cursor.execute("INSERT INTO users (first_name, last_name, username, email, hash) VALUES (?,?,?,?,?)", params.get('userFirstName'), params.get('userLastName'), params.get('username'), params.get('userEmail'), userPassword);
-            #cursor.commit()
+        cursor.execute("SELECT * FROM project_steps WHERE parent_project = ? ORDER BY step_order ASC", self.ID)
+        results = cursor.fetchall()
 
-            #cursor.execute("SELECT @@IDENTITY AS ID;")
-            #newID = cursor.fetchone()[0]
+        if results:
+            return results
+        else:
+            empty = []
+            return empty
 
-            #self.ID = newID
-            #self.firstName = params.get('userFirstName')
-            #self.lastName = params.get('userLastName')
-            #self.username = params.get('username')
-            #self.email = params.get('userEmail')
 
-    #def setUsername(passUsername):
-        #self.username = passUsername
 
-    #def getUsername(self):
-        #return self.username
+class ProjectStep:
+
+    def __init__(self, params):
+
+        cursor, conn = sqlServerConnect()
+
+        cursor.execute("SELECT * FROM project_steps WHERE id = ?", params.get('id'))
+        results = cursor.fetchone()
+
+        if results:
+            #We need to return the project's info and set the class
+            self.ID = results.ID
+            self.parent_project = results.parent_project
+            self.step_description = results.step_description
+            self.step_order = results.step_order
+            self.step_owner = results.step_owner
+            self.step_priority = results.step_priority
+            self.step_color = results.step_color
+            self.creation_date = results.creation_date
+
+    def complete(self):
+
+        cursor, conn = sqlServerConnect()
+
+        cursor.execute("UPDATE project_steps SET step_completion = 1 WHERE ID = ?", self.ID)
+
+        conn.commit()
+        
+
+
+
+
+
 
 
 def sqlServerConnect():
@@ -208,7 +234,7 @@ def getProjects(status):
     else:
         status = 1
 
-    cursor.execute("SELECT ID, project_name, project_description, project_length, project_owner, creation_date, '', '' FROM projects WHERE disabled = ? ", status)
+    cursor.execute("SELECT p.ID, p.project_name, p.project_description, p.project_length, u.username AS project_owner, p.creation_date, '', '' FROM projects p LEFT JOIN users u ON u.ID = p.project_owner WHERE p.disabled = ? ", status)
     rows = cursor.fetchall()
 
     rowarray_list = []
